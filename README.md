@@ -1,0 +1,2 @@
+# SecureNote
+Secure Notepad Replacement
