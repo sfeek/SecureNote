@@ -15,11 +15,11 @@ namespace SecureNote
         string password = string.Empty;
         bool textchanged = false;
         string shortFname = string.Empty;
-        string titleBase = "Secure Note v2.20";
+        string titleBase = "Secure Note v2.26";
 
         public System.Diagnostics.Process p = new System.Diagnostics.Process();
 
-        public frmSecureNote()
+        public frmSecureNote(string ofn)
         {
             InitializeComponent();
 
@@ -42,6 +42,13 @@ namespace SecureNote
             // Make sure title is correct
             this.Text = titleBase;
             textchanged = false;
+
+            // Open the associated file if present
+            if (ofn != string.Empty)
+            {
+                if (File.Exists(ofn))
+                    fOpen(ofn);
+            }
         }
 
         private void rtxtMain_TextChanged(object sender, EventArgs e)
@@ -66,6 +73,61 @@ namespace SecureNote
         {
             // Call Process.Start method to open a browser with link text as URL.  
             p = System.Diagnostics.Process.Start(e.LinkText);
+        }
+
+        private void fOpen(string fn)
+        {
+            byte[] AESdecbytes;
+
+            // Prepare for AES
+            RijndaelManaged AES = new RijndaelManaged();
+            AES.KeySize = 256;
+            byte[] cipher;
+
+            // Read the file
+            try
+            {
+                cipher = File.ReadAllBytes(fn);
+            }
+            catch
+            {
+                MessageBox.Show("Load Failed!", "File Error");
+                return;
+            }
+
+            // Keep the filename for save later
+            fname = fn;
+            shortFname = System.IO.Path.GetFileNameWithoutExtension(fname);
+
+            // Show password dialog
+            frmPassword1 p1 = new frmPassword1();
+            p1.StartPosition = FormStartPosition.CenterParent;
+            p1.ShowDialog();
+            password = p1.Password;
+
+            if (password == string.Empty)
+            {
+                MessageBox.Show("Empty Password, Aborting!", "Password Error");
+                return;
+            }
+
+            // Decrypt
+            AES.Key = crypto.AESCreateKey(p1.Password);
+            AES.IV = crypto.GetIVfromIVCipher(cipher);
+
+            AESdecbytes = crypto.AESDecrypt(crypto.GetCipherfromIVCipher(cipher), AES.Key, AES.IV);
+
+            if (AESdecbytes == null)
+            {
+                MessageBox.Show("AES Decryption Failed. Wrong Password or Corrupt File!", "AES Decryption Error");
+                return;
+            }
+
+            // Show decrypted text in the window
+            rtxtMain.Rtf = System.Text.Encoding.UTF8.GetString(Decompress(AESdecbytes));
+
+            textchanged = false;
+            this.Text = titleBase + " - " + shortFname;
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -190,6 +252,10 @@ namespace SecureNote
                     return;
                 }
 
+                // keep password and file path for later
+                password = p2.Password;
+                fname = saveFileDialog.FileName;
+
                 // Generate a new Key and IV for AES
                 AES.KeySize = 256;
                 AES.Key = crypto.AESCreateKey(p2.Password);
@@ -267,8 +333,23 @@ namespace SecureNote
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Paste
-            if (Clipboard.GetDataObject().GetDataPresent(DataFormats.Text))
-                rtxtMain.Paste();
+            DataFormats.Format myFormat;
+
+            myFormat = DataFormats.GetFormat(DataFormats.Rtf);
+
+            if (rtxtMain.CanPaste(myFormat))
+            {
+                rtxtMain.Paste(myFormat);
+                return;
+            }
+
+            myFormat = DataFormats.GetFormat(DataFormats.Text);
+
+            if (rtxtMain.CanPaste(myFormat))
+            {
+                rtxtMain.Paste(myFormat);
+                return;
+            }
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
