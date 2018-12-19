@@ -15,7 +15,7 @@ namespace SecureNote
         string password = string.Empty;
         bool textchanged = false;
         string shortFname = string.Empty;
-        string titleBase = "Secure Note v2.26";
+        string titleBase = "Secure Note v2.27";
 
         public System.Diagnostics.Process p = new System.Diagnostics.Process();
 
@@ -47,7 +47,9 @@ namespace SecureNote
             if (ofn != string.Empty)
             {
                 if (File.Exists(ofn))
-                    fOpen(ofn);
+                {
+                    if (fOpen(ofn) == 1) Environment.Exit(1); 
+                }
             }
         }
 
@@ -75,7 +77,7 @@ namespace SecureNote
             p = System.Diagnostics.Process.Start(e.LinkText);
         }
 
-        private void fOpen(string fn)
+        private int fOpen(string fn)
         {
             byte[] AESdecbytes;
 
@@ -92,7 +94,7 @@ namespace SecureNote
             catch
             {
                 MessageBox.Show("Load Failed!", "File Error");
-                return;
+                return 1;
             }
 
             // Keep the filename for save later
@@ -108,7 +110,7 @@ namespace SecureNote
             if (password == string.Empty)
             {
                 MessageBox.Show("Empty Password, Aborting!", "Password Error");
-                return;
+                return 1;
             }
 
             // Decrypt
@@ -120,7 +122,7 @@ namespace SecureNote
             if (AESdecbytes == null)
             {
                 MessageBox.Show("AES Decryption Failed. Wrong Password or Corrupt File!", "AES Decryption Error");
-                return;
+                return 1;
             }
 
             // Show decrypted text in the window
@@ -128,6 +130,8 @@ namespace SecureNote
 
             textchanged = false;
             this.Text = titleBase + " - " + shortFname;
+
+            return 0;
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
