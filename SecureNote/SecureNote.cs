@@ -15,7 +15,7 @@ namespace SecureNote
         string password = string.Empty;
         bool textchanged = false;
         string shortFname = string.Empty;
-        string titleBase = "Secure Note v2.27";
+        string titleBase = "Secure Note v2.31";
 
         public System.Diagnostics.Process p = new System.Diagnostics.Process();
 
@@ -42,6 +42,7 @@ namespace SecureNote
             // Make sure title is correct
             this.Text = titleBase;
             textchanged = false;
+
 
             // Open the associated file if present
             if (ofn != string.Empty)
@@ -212,6 +213,8 @@ namespace SecureNote
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (fname == String.Empty || password == String.Empty) saveAsToolstripMenuItem_Click(sender, e); // If we have not saved before, call Save As
+
             string rtf = rtxtMain.Rtf;
             byte[] AESencbytes;
             byte[] cipher;
@@ -232,67 +235,37 @@ namespace SecureNote
             // Prepare for AES
             RijndaelManaged AES = new RijndaelManaged();
 
-            // Show the Save As Dialog
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            shortFname = fname;
 
-            saveFileDialog.FileName = fname;
-            saveFileDialog.Filter = "Secure Note|*.snt";
-            saveFileDialog.Title = "Save a Secure Note File";
-            saveFileDialog.OverwritePrompt = false;
+             // Generate a new Key and IV for AES
+            AES.KeySize = 256;
+            AES.Key = crypto.AESCreateKey(password);
+            AES.GenerateIV();
 
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            // Encrypt
+            AESencbytes = crypto.AESEncrypt(bytes, AES.Key, AES.IV);
+
+            if (AESencbytes == null)
             {
-                shortFname = System.IO.Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
-
-                // Show password dialog
-                frmPassword2 p2 = new frmPassword2();
-                p2.Password = password;
-                p2.StartPosition = FormStartPosition.CenterParent;
-                p2.ShowDialog();
-
-                if (p2.Password == String.Empty)
-                {
-                    MessageBox.Show("Save Aborted, Empty Password!", "Save Error");
-                    return;
-                }
-
-                // keep password and file path for later
-                password = p2.Password;
-                fname = saveFileDialog.FileName;
-
-                // Generate a new Key and IV for AES
-                AES.KeySize = 256;
-                AES.Key = crypto.AESCreateKey(p2.Password);
-                AES.GenerateIV();
-
-                // Encrypt
-                AESencbytes = crypto.AESEncrypt(bytes, AES.Key, AES.IV);
-
-                if (AESencbytes == null)
-                {
-                    MessageBox.Show("AES Encryption Failed!", "AES Encryption Error");
-                    return;
-                }
-
-                cipher = crypto.IVCipher(AES.IV, AESencbytes);
-
-                // Write to the file
-                try
-                {
-                    using (BinaryWriter writer = new BinaryWriter(File.Open(saveFileDialog.FileName, FileMode.Create)))
-                    {
-                        writer.Write(cipher);
-                    }
-                }
-                catch
-                {
-                    MessageBox.Show("Save Failed!", "File Error");
-                    return;
-                }
-
-                this.Text = titleBase + " - " + shortFname;
-                textchanged = false;
+                MessageBox.Show("AES Encryption Failed!", "AES Encryption Error");
+                return;
             }
+
+            cipher = crypto.IVCipher(AES.IV, AESencbytes);
+
+            // Write to the file
+            try
+            {
+                File.WriteAllBytes(fname, cipher);
+            }
+            catch
+            {
+                MessageBox.Show("Save Failed!", "File Error");
+                return;
+            }
+
+            this.Text = titleBase + " - " + shortFname;
+            textchanged = false;
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -427,7 +400,6 @@ namespace SecureNote
             rtxtMain.DeselectAll();
             rtxtMain.SelectionStart = firstmatch;
             rtxtMain.Focus();
-
         }
 
         private void printToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -555,6 +527,88 @@ namespace SecureNote
         private void selectAllToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             selectAllToolStripMenuItem_Click(sender, e);
+        }
+
+        private void saveAsToolstripMenuItem_Click(object sender, EventArgs e)
+        {
+            string rtf = rtxtMain.Rtf;
+            byte[] AESencbytes;
+            byte[] cipher;
+
+            if (rtxtMain.Text == String.Empty) return;
+
+            // Clear search
+            rtxtMain.SelectAll();
+            rtxtMain.SelectionBackColor = Color.White;
+            rtxtMain.DeselectAll();
+
+            // Encode the Rich Text box
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(rtf);
+
+            // Compress the array
+            bytes = Compress(bytes);
+
+            // Prepare for AES
+            RijndaelManaged AES = new RijndaelManaged();
+
+            // Show the Save As Dialog
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+            saveFileDialog.FileName = fname;
+            saveFileDialog.Filter = "Secure Note|*.snt";
+            saveFileDialog.Title = "Save a Secure Note File";
+            saveFileDialog.OverwritePrompt = false;
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                shortFname = System.IO.Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
+
+                // Show password dialog
+                frmPassword2 p2 = new frmPassword2();
+                p2.Password = password;
+                p2.StartPosition = FormStartPosition.CenterParent;
+                p2.ShowDialog();
+
+                if (p2.Password == String.Empty)
+                {
+                    MessageBox.Show("Save Aborted, Empty Password!", "Save Error");
+                    return;
+                }
+
+                // keep password and file path for later
+                password = p2.Password;
+                fname = saveFileDialog.FileName;
+
+                // Generate a new Key and IV for AES
+                AES.KeySize = 256;
+                AES.Key = crypto.AESCreateKey(p2.Password);
+                AES.GenerateIV();
+
+                // Encrypt
+                AESencbytes = crypto.AESEncrypt(bytes, AES.Key, AES.IV);
+
+                if (AESencbytes == null)
+                {
+                    MessageBox.Show("AES Encryption Failed!", "AES Encryption Error");
+                    return;
+                }
+
+                cipher = crypto.IVCipher(AES.IV, AESencbytes);
+
+                // Write to the file
+                try
+                {
+                    File.WriteAllBytes(fname, cipher);
+                }
+                catch
+                {
+                    MessageBox.Show("Save Failed!", "File Error");
+                    return;
+                }
+
+                this.Text = titleBase + " - " + shortFname;
+                textchanged = false;
+            }
         }
     }
 }

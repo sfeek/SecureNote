@@ -41,6 +41,7 @@
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolstripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.printerSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -135,6 +136,7 @@
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
             this.saveToolStripMenuItem,
+            this.saveAsToolstripMenuItem,
             this.printToolStripMenuItem,
             this.printerSettingsToolStripMenuItem,
             this.exitToolStripMenuItem});
@@ -165,6 +167,13 @@
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // saveAsToolstripMenuItem
+            // 
+            this.saveAsToolstripMenuItem.Name = "saveAsToolstripMenuItem";
+            this.saveAsToolstripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.saveAsToolstripMenuItem.Text = "Save As";
+            this.saveAsToolstripMenuItem.Click += new System.EventHandler(this.saveAsToolstripMenuItem_Click);
             // 
             // printToolStripMenuItem
             // 
@@ -358,6 +367,7 @@
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolstripMenuItem;
     }
 }
 

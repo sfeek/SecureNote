@@ -1,0 +1,16 @@
+C:\SourceCode\SecureNote\SecureNote\bin\Debug\SecureNote.exe.config
+C:\SourceCode\SecureNote\SecureNote\bin\Debug\SecureNote.exe.manifest
+C:\SourceCode\SecureNote\SecureNote\bin\Debug\SecureNote.application
+C:\SourceCode\SecureNote\SecureNote\bin\Debug\SecureNote.exe
+C:\SourceCode\SecureNote\SecureNote\bin\Debug\SecureNote.pdb
+C:\SourceCode\SecureNote\SecureNote\obj\Debug\SecureNote.csprojAssemblyReference.cache
+C:\SourceCode\SecureNote\SecureNote\obj\Debug\SecureNote.frmFind.resources
+C:\SourceCode\SecureNote\SecureNote\obj\Debug\SecureNote.frmPassword1.resources
+C:\SourceCode\SecureNote\SecureNote\obj\Debug\SecureNote.frmPassword2.resources
+C:\SourceCode\SecureNote\SecureNote\obj\Debug\SecureNote.frmSecureNote.resources
+C:\SourceCode\SecureNote\SecureNote\obj\Debug\SecureNote.Properties.Resources.resources
+C:\SourceCode\SecureNote\SecureNote\obj\Debug\SecureNote.csproj.GenerateResource.cache
+C:\SourceCode\SecureNote\SecureNote\obj\Debug\SecureNote.exe.manifest
+C:\SourceCode\SecureNote\SecureNote\obj\Debug\SecureNote.application
+C:\SourceCode\SecureNote\SecureNote\obj\Debug\SecureNote.exe
+C:\SourceCode\SecureNote\SecureNote\obj\Debug\SecureNote.pdb
