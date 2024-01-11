@@ -15,21 +15,3 @@ C:\SourceCode\SecureNote\SecureNote\obj\Release\SecureNote.application
 C:\SourceCode\SecureNote\SecureNote\obj\Release\SecureNote.exe
 C:\SourceCode\SecureNote\SecureNote\obj\Release\SecureNote.pdb
 C:\SourceCode\SecureNote\SecureNote\obj\Release\SecureNote.csprojAssemblyReference.cache
-D:\Source Code\securenote\SecureNote\bin\Release\SecureNote.exe.config
-D:\Source Code\securenote\SecureNote\bin\Release\SecureNote.exe.manifest
-D:\Source Code\securenote\SecureNote\bin\Release\SecureNote.application
-D:\Source Code\securenote\SecureNote\bin\Release\SecureNote.exe
-D:\Source Code\securenote\SecureNote\bin\Release\SecureNote.pdb
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.csproj.AssemblyReference.cache
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.csproj.SuggestedBindingRedirects.cache
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.frmFind.resources
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.frmPassword1.resources
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.frmPassword2.resources
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.frmSecureNote.resources
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.Properties.Resources.resources
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.csproj.GenerateResource.cache
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.csproj.CoreCompileInputs.cache
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.exe.manifest
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.application
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.exe
-D:\Source Code\securenote\SecureNote\obj\Release\SecureNote.pdb
